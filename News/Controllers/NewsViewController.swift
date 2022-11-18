@@ -15,7 +15,8 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
     var apiCaller = APICaller()
 
     let baseUrl = "https://newsapi.org/v2/everything?q=apple&from=2022-11-13&to=2022-11-13&sortBy=popularity&apiKey="
-    let apiKey = "a934aa628f954a48aeec1328b6f79f73"
+    let apiKey =
+                "a934aa628f954a48aeec1328b6f79f73"
    
 
     override func viewDidLoad() {
@@ -27,8 +28,10 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         apiCaller.delegate = self
         apiCaller.getNews(from: baseUrl, with: apiKey)
        
-        tableView.register(UINib.init(nibName: "TableViewCell", bundle: nibBundle), forCellReuseIdentifier: "goToCell")
-        self.tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "goToNews")
+        tableView.register(UINib.init(nibName: "CustomTableViewCell", bundle: nil), forCellReuseIdentifier: "CustomCell")
+        self.tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "goToCustomCell")
+        
+        tableView.rowHeight = 300
 
         
         DispatchQueue.main.async {
