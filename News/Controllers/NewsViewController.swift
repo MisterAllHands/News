@@ -16,6 +16,8 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     var articless = [Article]()
     var viewModels = [NewTableViewCellModel]()
+    var indexPathForNews:String?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -113,6 +115,9 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         cell.shareButton.tag = indexPath.row
         cell.bookmarkButton.tag = indexPath.row
+        
+        indexPathForNews = articless[indexPath.row].url
+        
         cell.shareButton.addTarget(self, action: #selector(shareButtonFunc), for: .touchUpInside)
         cell.shareButton.configuration?.cornerStyle = .capsule
         cell.bookmarkButton.configuration?.cornerStyle = .capsule
@@ -146,9 +151,8 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @objc public func shareButtonFunc(_ sender: UIButton) {
         
-        guard let sharedArticle = articless.first?.url else{return}
-        let shareVC = UIActivityViewController(activityItems: [sharedArticle], applicationActivities: nil)
-        present(shareVC, animated: true)
-        
+        let sharedArticle = indexPathForNews
+        let shareVC = UIActivityViewController(activityItems: [sharedArticle!], applicationActivities: nil)
+            present(shareVC, animated: true)
     }
 }

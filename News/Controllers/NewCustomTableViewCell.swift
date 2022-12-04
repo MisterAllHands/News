@@ -69,8 +69,7 @@ class NewCustomTableViewCell: UITableViewCell {
     }
  
     @IBAction func shareButton(_ sender: UIButton) {
-        
-        
+
        
     }
     

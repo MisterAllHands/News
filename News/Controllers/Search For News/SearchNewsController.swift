@@ -18,6 +18,7 @@ class SearchNewsController: UIViewController, UITableViewDelegate, UITableViewDa
     var historyVisible = false
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var historyArray = [Histories]()
+    var indexPathForNews:String?
     
     var suggestions = ["Swift", "Tesla", "Money", "Networking", "Bitcoin", "Amazon"]
     
@@ -70,6 +71,8 @@ class SearchNewsController: UIViewController, UITableViewDelegate, UITableViewDa
                 cell.bookmarkButton.tag = indexPath.row
                 cell.shareButton.configuration?.cornerStyle = .capsule
                 cell.bookmarkButton.configuration?.cornerStyle = .capsule
+                indexPathForNews = articles[indexPath.row].url
+
                 cell.shareButton.addTarget(self, action: #selector(shareButtonFunc), for: .touchUpInside)
                 return cell
             }else{
@@ -210,9 +213,9 @@ class SearchNewsController: UIViewController, UITableViewDelegate, UITableViewDa
     
     @objc public func shareButtonFunc(_ sender: UIButton) {
         
-        guard let sharedArticle = articles.first?.url else{return}
+       let sharedArticle = indexPathForNews
         
-        let shareVC = UIActivityViewController(activityItems: [sharedArticle], applicationActivities: nil)
+        let shareVC = UIActivityViewController(activityItems: [sharedArticle!], applicationActivities: nil)
         
         present(shareVC, animated: true)
     }
@@ -256,19 +259,26 @@ extension SearchNewsController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
         if searchBar.text!.count > 0 {
+            
+            self.historyVisible = false
+            self.isShown = true
+            
             DispatchQueue.main.async {
-                self.historyVisible = false
-                self.isShown = true
                 self.suggestionsTableView.reloadData()
             }
+            
         }else{
+            isShown = true
+            
             DispatchQueue.main.async {
-                self.isShown = true
                 self.searchBar.resignFirstResponder()
                 self.suggestionsTableView.reloadData()
-                self.isShown = false
-                self.historyVisible = true
-                self.loadHistory()
+            }
+                isShown = false
+                historyVisible = true
+                loadHistory()
+            
+            DispatchQueue.main.async {
                 self.suggestionsTableView.reloadData()
             }
         }
