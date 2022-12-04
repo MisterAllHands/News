@@ -9,51 +9,70 @@ import Foundation
 import UIKit
 
 
-protocol NewsManagerDelegate {
-    func didUpdateNews(article: [Article])
-    func didFailWithError(error: Error)
-    
-}
-
 struct APICaller {
     
-    var delegate: NewsManagerDelegate?
-    
-    
-    func getNews(from  url: String, with apiKey: String){
+    static let shared = APICaller()
         
-        if let url = URL(string: "\(url)\(apiKey)"){
+    let baseUrl = "https://newsapi.org/v2/top-headlines?country=us"
+    let searchUrl = "https://newsapi.org/v2/everything?"
+    let apiKey = "apiKey=a934aa628f954a48aeec1328b6f79f73"
+  
+
+
+    //MARK - Requesting data
+    
+    func getNews(category: String, completion: @escaping (Result<[Article], Error>) -> Void) {
+        
+        if let url = URL(string: "\(baseUrl)&category=\(category)&\(apiKey)") {
             
             let task = URLSession.shared.dataTask(with: url) { data, response, error in
                 
+                //MARK - Parsing JSON
+                
                 if error != nil {
-                    delegate?.didFailWithError(error: error!)
-                    
+                    completion(.failure(error!))
                 }else if let safeData = data {
                     
-                        let decodedData = self.parseJSON(safeData)
-                    delegate?.didUpdateNews(article: decodedData!)
+                    do{
+                        let decodedData = try JSONDecoder().decode(APIResponse.self, from: safeData)
+                        print(decodedData.articles)
+                        completion(.success(decodedData.articles))
+                        
+                    }catch{
+                        completion(.failure(error))
+                    }
                 }
             }
             task.resume()
         }
     }
     
-    func parseJSON(_ data: Data) -> [Article]? {
-        
-        let decoder = JSONDecoder()
-        
-        do {
- 
-            let decodedData = try decoder.decode(APIResponse.self, from: data)
-            let articles = decodedData.articles
-            print(articles.count)
-            return articles
+    func getNews(with query: String, completion: @escaping (Result<[Article], Error>) -> Void) {
+        guard !query.trimmingCharacters(in: .whitespaces).isEmpty else {
+            return
+        }
+        if let url = URL(string: "\(searchUrl)q=\(query)&\(apiKey)") {
             
-        }catch {
-            delegate?.didFailWithError(error: error)
-            print(error)
-            return nil
+            let task = URLSession.shared.dataTask(with: url) { data, response, error in
+                
+                //MARK - Parsing JSON
+                
+                if error != nil {
+                    completion(.failure(error!))
+                }else if let safeData = data {
+                    
+                    do{
+                        let decodedData = try JSONDecoder().decode(APIResponse.self, from: safeData)
+                        print(decodedData.articles)
+                        completion(.success(decodedData.articles))
+                        
+                    }catch{
+                        completion(.failure(error))
+                    }
+                }
+            }
+            task.resume()
         }
     }
+    
 }
