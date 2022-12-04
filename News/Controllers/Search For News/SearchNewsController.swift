@@ -7,21 +7,17 @@
 
 import UIKit
 import SafariServices
-import RealmSwift
 import CoreData
 
 class SearchNewsController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate{
-    
-    let realm = try! Realm()
-    var searchHistory: Results<SearchHistory>?
-    
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var suggestionsTableView: UITableView!
     
     var isShown = false
     var historyVisible = false
-   
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var historyArray = [Histories]()
     
     var suggestions = ["Swift", "Tesla", "Money", "Networking", "Bitcoin", "Amazon"]
     
@@ -33,7 +29,7 @@ class SearchNewsController: UIViewController, UITableViewDelegate, UITableViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
         searchBar.delegate = self
         suggestionsTableView.delegate = self
@@ -51,6 +47,7 @@ class SearchNewsController: UIViewController, UITableViewDelegate, UITableViewDa
         suggestionsTableView.register(SearchHeader.self, forHeaderFooterViewReuseIdentifier: "header")
         
         historyVisible = true
+        
         loadHistory()
     }
     
@@ -60,7 +57,7 @@ class SearchNewsController: UIViewController, UITableViewDelegate, UITableViewDa
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "SearchHistoryTableViewCell", for: indexPath) as! SearchHistoryTableViewCell
         
-            cell.historySearchButton?.text = searchHistory?[indexPath.row].history ?? "Not Searcged Anyting"
+            cell.historySearchButton.text = historyArray[indexPath.row].historyItem
             return cell
             
         }else{
@@ -95,17 +92,15 @@ class SearchNewsController: UIViewController, UITableViewDelegate, UITableViewDa
             let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
             tapRecognizer.delegate = self
             tapRecognizer.numberOfTapsRequired = 1
-                tapRecognizer.numberOfTouchesRequired = 1
+            tapRecognizer.numberOfTouchesRequired = 1
    
             let seachHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header")
             seachHeader?.addGestureRecognizer(tapRecognizer)
             return seachHeader
-
             
         }else{
             return nil
         }
-       
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -122,8 +117,7 @@ class SearchNewsController: UIViewController, UITableViewDelegate, UITableViewDa
             return suggestions.count
         }else{
             if historyVisible{
-                
-                return searchHistory?.count ?? 2
+                return historyArray.count
             }
         }
         return viewModels.count
@@ -151,24 +145,27 @@ class SearchNewsController: UIViewController, UITableViewDelegate, UITableViewDa
                 tableView.deselectRow(at: indexPath, animated: true)
                 
                 searchBar.text = suggestions[indexPath.row]
-                let selectedSearchHistory = SearchHistory()
-                selectedSearchHistory.history = searchBar.text!
-                saveSearch(searchHistory: selectedSearchHistory)
+//                let selectedSearchHistory = SearchHistory()
+                let selectedSearch = Histories(context: context)
+                selectedSearch.historyItem = (searchBar.text!)
+//                saveSearch(searchHistory: selectedSearchHistory)
+                saveSearch()
                 isShown = false
                 fetchSearch(searchBar.text!)
             }
             if historyVisible{
     
                 tableView.deselectRow(at: indexPath, animated: true)
-//                let selectedHistory = SearchHistory()
-//                print(selectedHistory.history[indexPath.row])
-////                searchBar.text = selectedHistory.history[0]
-//                historyVisible = false
-//                isShown = true
+                searchBar.text = historyArray[indexPath.row].historyItem
+                historyVisible = false
+                isShown = false
+                fetchSearch(searchBar.text!)
 //
             }
         }
     }
+    
+    //MARK - Deleting history individualy
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         if historyVisible{
@@ -178,13 +175,20 @@ class SearchNewsController: UIViewController, UITableViewDelegate, UITableViewDa
     }
    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
         if historyVisible{
+            
+            let historyToRemove = historyArray[indexPath.row]
             tableView.beginUpdates()
-            clearHistory(at: indexPath)
+            self.context.delete(historyToRemove)
+            saveSearch()
+            loadHistory()
             tableView.deleteRows(at: [indexPath], with: .fade)
             tableView.endUpdates()
         }
     }
+    
+    //MARK - Setting hight for each individual table
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
@@ -202,8 +206,7 @@ class SearchNewsController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
-  //MARK - Sharing News
-    
+ //MARK: - Sharing news
     
     @objc public func shareButtonFunc(_ sender: UIButton) {
         
@@ -213,6 +216,8 @@ class SearchNewsController: UIViewController, UITableViewDelegate, UITableViewDa
         
         present(shareVC, animated: true)
     }
+    
+//MARK: - Deleting all the history based on user's choice
     
     @objc  func handleTap(gestureRecognizer: UIGestureRecognizer){
       
@@ -226,16 +231,8 @@ class SearchNewsController: UIViewController, UITableViewDelegate, UITableViewDa
       }
     
     func deleteHistory (action: UIAlertAction){
-        
-        do{
-            try realm.write({
-                realm.delete(realm.objects(SearchHistory.self))
-                loadHistory()
-            })
-        }catch{
-            fatalError()
-        }
-    }
+        clearAllHistory()
+   }
 }
 
 //MARK: - Implemeting SearchBar
@@ -248,10 +245,9 @@ extension SearchNewsController: UISearchBarDelegate {
         guard let text = searchBar.text, !text.isEmpty else {
             return
         }
-        let newSeachHistory = SearchHistory()
-        newSeachHistory.history = text
-
-        saveSearch(searchHistory: newSeachHistory)
+        let savingHistory = Histories(context: context)
+        savingHistory.historyItem = text
+        saveSearch()
         fetchSearch(text)
         searchBar.resignFirstResponder()
         
@@ -272,6 +268,7 @@ extension SearchNewsController: UISearchBarDelegate {
                 self.suggestionsTableView.reloadData()
                 self.isShown = false
                 self.historyVisible = true
+                self.loadHistory()
                 self.suggestionsTableView.reloadData()
             }
         }
@@ -304,44 +301,73 @@ extension SearchNewsController: UISearchBarDelegate {
         })
     }
 }
-    //MARK: - Saving search history
+
+//MARK: - Implementing CoreData Methods
 
 
 extension SearchNewsController {
     
-    //Saving Items
-
-    func saveSearch(searchHistory: SearchHistory){
-        
+    //MARK - Saving history
+    
+    func saveSearch(){
         do{
-            try realm.write {
-                realm.add(searchHistory)
-            }
+            try context.save()
         }catch{
-            fatalError("Error while save history search: \(error)")
+            fatalError("Error while saving your data \(error)")
         }
-
+        
         suggestionsTableView.reloadData()
     }
     
-    //Updating items
+    //MARK - Updating history table
 
     func loadHistory(){
-        searchHistory = realm.objects(SearchHistory.self)
-        suggestionsTableView.reloadData()
-    }
-    //Deleting Items
-    
-    func clearHistory(at indexpath: IndexPath){
-        if let deletedHistorySearch = self.searchHistory?[indexpath.row]{
-            do{
-                try realm.write({
-                    realm.delete(deletedHistorySearch)
-                })
-            }catch{
-                fatalError("Error while deleting the item in the search history: \(error)")
+
+        let request: NSFetchRequest<Histories> = Histories.fetchRequest()
+        
+        do{
+            historyArray = try context.fetch(request)
+            DispatchQueue.main.async {
+                self.suggestionsTableView.reloadData()
             }
         }
+        catch{
+            fatalError("Error while fetching requst \(error)")
+        }
+    }
+   
+    //MARK - Deleting Search History
+    
+    func clearAllHistory(){
+        
+        let storeContainer =
+        (UIApplication.shared.delegate as! AppDelegate).persistentContainer.persistentStoreCoordinator
+        var persistentContainer =  (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+
+        // Delete each existing persistent store
+        
+        for store in storeContainer.persistentStores {
+            try! storeContainer.destroyPersistentStore(
+                at: store.url!,
+                ofType: store.type,
+                options: nil
+            )
+        }
+
+        // Re-create the persistent container
+        
+        persistentContainer = NSPersistentContainer(
+            name: "DataModel" // the name of
+            // a .xcdatamodeld file
+        )
+
+        // Calling loadPersistentStores will re-create the persistent stores
+        
+        persistentContainer.loadPersistentStores {
+            (store, error) in
+            self.loadHistory()
+        }
+
     }
 }
 

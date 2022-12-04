@@ -79,76 +79,76 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         menuBar.menu = menu
         return menu
     }
-        
+    
     func fetchNews(selectedCategory: String) {
+        
+        APICaller.shared.getNews( category: selectedCategory ,completion: {[weak self] result in
             
-            APICaller.shared.getNews( category: selectedCategory ,completion: {[weak self] result in
+            switch result {
+            case .success(let articles):
+                self?.articless = articles
+                self?.viewModels = articles.compactMap({NewTableViewCellModel(
+                    title: $0.title,
+                    description: $0.description,
+                    source: $0.source.name,
+                    image: $0.description ?? "No description",
+                    urlToImage: URL(string: $0.urlToImage ?? "" ))
+                })
                 
-                switch result {
-                case .success(let articles):
-                    self?.articless = articles
-                    self?.viewModels = articles.compactMap({NewTableViewCellModel(
-                        title: $0.title,
-                        description: $0.description,
-                        source: $0.source.name,
-                        image: $0.description ?? "No description",
-                        urlToImage: URL(string: $0.urlToImage ?? "" ))
-                    })
-                    
-                    DispatchQueue.main.async {
-                        self?.tableView.reloadData()
-                    }
-                case .failure(let error):
-                    print(error)
+                DispatchQueue.main.async {
+                    self?.tableView.reloadData()
                 }
-            })
-        }
-        
-        //MARK: - TableViewDataSource Methods
-        
-        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "NewCustomTableViewCell", for: indexPath) as! NewCustomTableViewCell
-            
-            cell.configure(with: viewModels[indexPath.row])
-            
-            cell.shareButton.tag = indexPath.row
-            cell.bookmarkButton.tag = indexPath.row
-            cell.shareButton.addTarget(self, action: #selector(shareButtonFunc), for: .touchUpInside)
-            cell.shareButton.configuration?.cornerStyle = .capsule
-            cell.bookmarkButton.configuration?.cornerStyle = .capsule
-            
-            return cell
-        }
-        
-        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return viewModels.count
-        }
-        
-        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            tableView.deselectRow(at: indexPath, animated: true)
-            
-            //Redirecting user to Safari Web Page accoring to their selected article
-            let article = articless[indexPath.row]
-            
-            if let url = URL(string: article.url) {
-                
-                let vc = SFSafariViewController(url: url)
-                vc.modalPresentationStyle = .formSheet
-                vc.preferredBarTintColor = .flatSkyBlue()
-                vc.preferredControlTintColor = .flatWhite()
-                present(vc, animated: true)
+            case .failure(let error):
+                print(error)
             }
-        }
-        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-            return 490
-        }
+        })
+    }
+    
+    //MARK: - TableViewDataSource Methods
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "NewCustomTableViewCell", for: indexPath) as! NewCustomTableViewCell
         
-        @objc public func shareButtonFunc(_ sender: UIButton) {
+        cell.configure(with: viewModels[indexPath.row])
+        
+        cell.shareButton.tag = indexPath.row
+        cell.bookmarkButton.tag = indexPath.row
+        cell.shareButton.addTarget(self, action: #selector(shareButtonFunc), for: .touchUpInside)
+        cell.shareButton.configuration?.cornerStyle = .capsule
+        cell.bookmarkButton.configuration?.cornerStyle = .capsule
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModels.count
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        //Redirecting user to Safari Web Page accoring to their selected article
+        let article = articless[indexPath.row]
+        
+        if let url = URL(string: article.url) {
             
-            let alert = UIAlertController(title: "Share", message: "Share News", preferredStyle: .alert)
-            let action = UIAlertAction(title: "Share", style: .default)
-            alert.addAction(action)
-            present(alert, animated: true)
-            
+            let vc = SFSafariViewController(url: url)
+            vc.modalPresentationStyle = .formSheet
+            vc.preferredBarTintColor = .flatSkyBlue()
+            vc.preferredControlTintColor = .flatWhite()
+            present(vc, animated: true)
         }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 490
+    }
+    
+    @objc public func shareButtonFunc(_ sender: UIButton) {
+        
+        guard let sharedArticle = articless.first?.url else{return}
+        let shareVC = UIActivityViewController(activityItems: [sharedArticle], applicationActivities: nil)
+        present(shareVC, animated: true)
+        
+    }
 }

@@ -53,10 +53,10 @@
             </objects>
             <point key="canvasLocation" x="-29" y="1468"/>
         </scene>
-        <!--Custom Tab Bar Controller-->
+        <!--Animated Tab Bar Controller-->
         <scene sceneID="G0D-QA-Mom">
             <objects>
-                <tabBarController hidesBottomBarWhenPushed="YES" id="IkR-IJ-dMa" customClass="CustomTabBarController" customModule="News" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController hidesBottomBarWhenPushed="YES" id="IkR-IJ-dMa" customClass="RAMAnimatedTabBarController" customModule="RAMAnimatedTabBarController" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="dSc-Dt-WRR">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="83"/>
                         <autoresizingMask key="autoresizingMask"/>

@@ -10,7 +10,6 @@
 		D043D932A0C6DF2BE9DE9266 /* Pods_News.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06E0FD34541B626E5480C716 /* Pods_News.framework */; };
 		ED2BFE3B2930049000BA2205 /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2BFE392930049000BA2205 /* SearchTableViewCell.swift */; };
 		ED2BFE3C2930049000BA2205 /* SearchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED2BFE3A2930049000BA2205 /* SearchTableViewCell.xib */; };
-		ED2BFE4229379FCC00BA2205 /* SearchHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2BFE4129379FCC00BA2205 /* SearchHistory.swift */; };
 		ED2BFE462937D50E00BA2205 /* SearchHistoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2BFE442937D50E00BA2205 /* SearchHistoryTableViewCell.swift */; };
 		ED2BFE472937D50E00BA2205 /* SearchHistoryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED2BFE452937D50E00BA2205 /* SearchHistoryTableViewCell.xib */; };
 		ED7D45A22927E6CD0095F7FE /* NewCustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D45A02927E6CD0095F7FE /* NewCustomTableViewCell.swift */; };
@@ -23,7 +22,6 @@
 		ED8E5A4629229D1D009DCC32 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ED8E5A4429229D1D009DCC32 /* LaunchScreen.storyboard */; };
 		ED8E5A5029229D40009DCC32 /* APICaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8E5A4E29229D3F009DCC32 /* APICaller.swift */; };
 		ED8E5A5129229D40009DCC32 /* APIreponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8E5A4F29229D40009DCC32 /* APIreponse.swift */; };
-		ED9F603C292CE25D00273275 /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED9F603B292CE25D00273275 /* CustomTabBarController.swift */; };
 		EDC8F260292E24550054EB8E /* icons8-меню-36.png in Resources */ = {isa = PBXBuildFile; fileRef = EDC8F25F292E24550054EB8E /* icons8-меню-36.png */; };
 		EDE0ED2F293A9DE700776AB0 /* Header.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDE0ED2E293A9DE700776AB0 /* Header.swift */; };
 		EDE0ED58293C9E5600776AB0 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EDE0ED56293C9E5600776AB0 /* DataModel.xcdatamodeld */; };
@@ -38,7 +36,6 @@
 		415DDC19AD87C6FAD3530E41 /* Pods-News.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-News.release.xcconfig"; path = "Target Support Files/Pods-News/Pods-News.release.xcconfig"; sourceTree = "<group>"; };
 		ED2BFE392930049000BA2205 /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		ED2BFE3A2930049000BA2205 /* SearchTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchTableViewCell.xib; sourceTree = "<group>"; };
-		ED2BFE4129379FCC00BA2205 /* SearchHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistory.swift; sourceTree = "<group>"; };
 		ED2BFE442937D50E00BA2205 /* SearchHistoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryTableViewCell.swift; sourceTree = "<group>"; };
 		ED2BFE452937D50E00BA2205 /* SearchHistoryTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchHistoryTableViewCell.xib; sourceTree = "<group>"; };
 		ED7D45A02927E6CD0095F7FE /* NewCustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCustomTableViewCell.swift; sourceTree = "<group>"; };
@@ -53,7 +50,6 @@
 		ED8E5A4729229D1D009DCC32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ED8E5A4E29229D3F009DCC32 /* APICaller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APICaller.swift; sourceTree = "<group>"; };
 		ED8E5A4F29229D40009DCC32 /* APIreponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIreponse.swift; sourceTree = "<group>"; };
-		ED9F603B292CE25D00273275 /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
 		EDC8F25F292E24550054EB8E /* icons8-меню-36.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icons8-меню-36.png"; sourceTree = "<group>"; };
 		EDE0ED2E293A9DE700776AB0 /* Header.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Header.swift; sourceTree = "<group>"; };
 		EDE0ED57293C9E5600776AB0 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
@@ -140,7 +136,6 @@
 			children = (
 				ED8E5A4F29229D40009DCC32 /* APIreponse.swift */,
 				ED8E5A4E29229D3F009DCC32 /* APICaller.swift */,
-				ED2BFE4129379FCC00BA2205 /* SearchHistory.swift */,
 				EDE0ED56293C9E5600776AB0 /* DataModel.xcdatamodeld */,
 			);
 			path = Model;
@@ -152,7 +147,6 @@
 				ED8E5A3D29229D1B009DCC32 /* NewsViewController.swift */,
 				ED7D45A02927E6CD0095F7FE /* NewCustomTableViewCell.swift */,
 				ED7D45A12927E6CD0095F7FE /* NewCustomTableViewCell.xib */,
-				ED9F603B292CE25D00273275 /* CustomTabBarController.swift */,
 				EDE4D9BC292973DE00C38D2A /* Search For News */,
 				EDE4D9BD292973FC00C38D2A /* Bookmark */,
 			);
@@ -309,13 +303,11 @@
 				ED8E5A5029229D40009DCC32 /* APICaller.swift in Sources */,
 				ED8E5A3E29229D1B009DCC32 /* NewsViewController.swift in Sources */,
 				ED8E5A3A29229D1B009DCC32 /* AppDelegate.swift in Sources */,
-				ED2BFE4229379FCC00BA2205 /* SearchHistory.swift in Sources */,
 				ED7D45A22927E6CD0095F7FE /* NewCustomTableViewCell.swift in Sources */,
 				ED2BFE462937D50E00BA2205 /* SearchHistoryTableViewCell.swift in Sources */,
 				EDE0ED58293C9E5600776AB0 /* DataModel.xcdatamodeld in Sources */,
 				ED2BFE3B2930049000BA2205 /* SearchTableViewCell.swift in Sources */,
 				EDE4D9C12929755600C38D2A /* BookmarkViewController.swift in Sources */,
-				ED9F603C292CE25D00273275 /* CustomTabBarController.swift in Sources */,
 				ED8E5A5129229D40009DCC32 /* APIreponse.swift in Sources */,
 				EDE0ED2F293A9DE700776AB0 /* Header.swift in Sources */,
 				EDE4D9BF2929745600C38D2A /* SearchNewsController.swift in Sources */,

@@ -42,12 +42,5 @@ class SearchHeader: UITableViewHeaderFooterView{
                              width: contentView.frame.size.width,
                              height: label.frame.size.height)
         clearButton.frame = CGRectMake(0 , contentView.frame.size.height-20, contentView.frame.size.width + 300, clearButton.frame.size.height)
-        clearButton.addTarget(self, action: #selector(buttonClicks), for: .touchUpInside)
-    }
-    
-    @objc func buttonClicks(){
-  
-        print("ting")
-        
     }
 }

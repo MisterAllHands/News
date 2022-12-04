@@ -6,20 +6,11 @@
 //
 
 import UIKit
-import SwipeCellKit
 
-class BookMarkTableViewCell: SwipeTableViewCell {
+class BookMarkTableViewCell: UITableViewCell {
   
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
-
-
-//    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeCellKit.SwipeActionsOrientation) -> [SwipeCellKit.SwipeAction]? {
-//        print("int")
-//    }
-    
-
-
 }
