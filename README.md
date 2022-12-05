@@ -1,6 +1,6 @@
 # News
 
-Fully Functional News App that allows you to red, select, and search for news based on your own preference. 
+Fully Functional News App that allows you to read, select, and search for news based on your own preference. 
 
 The Software is free to use. Distribute, cope and share to others. 
 
